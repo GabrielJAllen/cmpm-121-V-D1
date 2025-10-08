@@ -4,3 +4,4 @@ import "./style.css";
 document.body.innerHTML = `
   <p>Example image asset: <img src="${exampleIconUrl}" class="icon" /></p>
 `;
+//Trying to leave a comment, i cannot see what i am typing. hopefully this works :)
