@@ -2,7 +2,7 @@
 import "./style.css";
 
 //deno - lint - ignore prefer -const
-const counter: number = 0;
+let counter: number = 0;
 
 document.body.innerHTML = `
   <h1>Incremental Game</h1>
@@ -15,10 +15,12 @@ const button = document.getElementById("increment")!;
 const counterElement = document.getElementById("counter")!;
 
 button.addEventListener("click", () => {
-  incrementCounter(1, counter);
-  counterElement.innerHTML = counter.toString();
+  incrementCounter(1);
 });
 
-function incrementCounter(amount: number, counter: number) {
+setInterval(incrementCounter, 1000, 1);
+
+function incrementCounter(amount: number) {
   counter += amount;
+  counterElement.innerHTML = counter.toString();
 }
