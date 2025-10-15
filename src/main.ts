@@ -3,19 +3,28 @@ import "./style.css";
 
 //deno - lint - ignore prefer -const
 let counter: number = 0;
+let growthRate: number = 0;
 
 document.body.innerHTML = `
   <h1>Incremental Game</h1>
   <p>Counter: <span id="counter">0</span></p>
   <button id="increment">🐐</button>
+  <button id="upgradeA" disabled>📣</button>
+
 `;
 
 // Add click handler
 const button = document.getElementById("increment")!;
+const upA = <HTMLButtonElement> document.getElementById("upgradeA")!;
 const counterElement = document.getElementById("counter")!;
 
 button.addEventListener("click", () => {
   incrementCounter(1);
+});
+
+upA.addEventListener("click", () => {
+  incrementCounter(-10);
+  growthRate++;
 });
 
 requestAnimationFrame(step);
@@ -31,9 +40,20 @@ function step(timestamp: number) {
   }
   const elapsed = timestamp - start;
   start = timestamp;
-  const increase = (1 * elapsed) / 1000;
+  const increase = (growthRate * elapsed) / 1000;
   incrementCounter(increase);
+
+  checkCost(upA, 10);
+
   requestAnimationFrame(step);
+}
+
+function checkCounter(val: number) {
+  return val > counter;
+}
+
+function checkCost(item: HTMLButtonElement, threshold: number) {
+  item.disabled = checkCounter(threshold);
 }
 
 function incrementCounter(amount: number) {
