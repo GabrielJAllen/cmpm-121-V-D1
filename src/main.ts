@@ -7,6 +7,7 @@ let growthRate: number = 0;
 
 interface Upgrade {
   name: string;
+  description: string;
   button: HTMLButtonElement;
   count: number;
   countText: HTMLElement;
@@ -27,7 +28,13 @@ document.body.innerHTML = `
   News Articles: <span id="upBCount">0</span>
   <p>
   <button id="upgradeC" disabled>👨🏼‍💻</button>
-  Algorithm: <span id="upCCount">0</span>
+  Algorithms: <span id="upCCount">0</span>
+  <p>
+  <button id="upgradeD" disabled>🎙️</button>
+  Podcasters: <span id="upDCount">0</span>
+  <p>
+  <button id="upgradeE" disabled>👨🏻‍⚖️</button>
+  Lobbyists: <span id="upECount">0</span>
   <p>
 
 `;
@@ -38,6 +45,7 @@ const button = document.getElementById("increment")!;
 const availableItems: Upgrade[] = [
   {
     name: "heckler",
+    description: "Not very convincing, but a vocal minority",
     button: <HTMLButtonElement> document.getElementById("upgradeA")!,
     count: 0,
     countText: document.getElementById("upACount")!,
@@ -47,6 +55,7 @@ const availableItems: Upgrade[] = [
 
   {
     name: "newsArticle",
+    description: "Surely if it's printed it's trustworthy",
     button: <HTMLButtonElement> document.getElementById("upgradeB")!,
     count: 0,
     countText: document.getElementById("upBCount")!,
@@ -56,11 +65,32 @@ const availableItems: Upgrade[] = [
 
   {
     name: "algorithm",
+    description: "Creating echochambers galore!",
     button: <HTMLButtonElement> document.getElementById("upgradeC")!,
     count: 0,
     countText: document.getElementById("upCCount")!,
     cost: 1000,
     rate: 50,
+  },
+
+  {
+    name: "podcasters",
+    description: "Confirmation bias is a hell of a thing",
+    button: <HTMLButtonElement> document.getElementById("upgradeD")!,
+    count: 0,
+    countText: document.getElementById("upDCount")!,
+    cost: 5000,
+    rate: 100,
+  },
+
+  {
+    name: "lobbyists",
+    description: "Because bribery is illegal!",
+    button: <HTMLButtonElement> document.getElementById("upgradeE")!,
+    count: 0,
+    countText: document.getElementById("upECount")!,
+    cost: 10000,
+    rate: 300,
   },
 ];
 
@@ -75,6 +105,7 @@ availableItems.forEach((element, index) => {
   element.button.addEventListener("click", () => {
     purchaseUpgrade(index);
   });
+  element.button.title = element.description;
 });
 
 requestAnimationFrame(step);
