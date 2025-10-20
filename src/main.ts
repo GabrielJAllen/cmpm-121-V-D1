@@ -4,7 +4,15 @@ import "./style.css";
 //deno - lint - ignore prefer -const
 let counter: number = 0;
 let growthRate: number = 0;
-const upgradeDetails: number[][] = [[0, 10, .1], [0, 100, 2], [0, 1000, 50]];
+
+interface Upgrade {
+  name: string;
+  button: HTMLButtonElement;
+  count: number;
+  countText: HTMLElement;
+  cost: number;
+  rate: number;
+}
 
 document.body.innerHTML = `
   <h1>Scapegoating Simulator</h1>
@@ -26,13 +34,34 @@ document.body.innerHTML = `
 
 // Add click handler
 const button = document.getElementById("increment")!;
-const upA = <HTMLButtonElement> document.getElementById("upgradeA")!;
-const upB = <HTMLButtonElement> document.getElementById("upgradeB")!;
-const upC = <HTMLButtonElement> document.getElementById("upgradeC")!;
-const upCounts = [
-  document.getElementById("upACount")!,
-  document.getElementById("upBCount")!,
-  document.getElementById("upCCount")!,
+
+const availableItems: Upgrade[] = [
+  {
+    name: "heckler",
+    button: <HTMLButtonElement> document.getElementById("upgradeA")!,
+    count: 0,
+    countText: document.getElementById("upACount")!,
+    cost: 10,
+    rate: .1,
+  },
+
+  {
+    name: "newsArticle",
+    button: <HTMLButtonElement> document.getElementById("upgradeB")!,
+    count: 0,
+    countText: document.getElementById("upBCount")!,
+    cost: 100,
+    rate: 2,
+  },
+
+  {
+    name: "algorithm",
+    button: <HTMLButtonElement> document.getElementById("upgradeC")!,
+    count: 0,
+    countText: document.getElementById("upCCount")!,
+    cost: 1000,
+    rate: 50,
+  },
 ];
 
 const counterElement = document.getElementById("counter")!;
@@ -42,16 +71,10 @@ button.addEventListener("click", () => {
   incrementCounter(1);
 });
 
-upA.addEventListener("click", () => {
-  purchaseUpgrade(0);
-});
-
-upB.addEventListener("click", () => {
-  purchaseUpgrade(1);
-});
-
-upC.addEventListener("click", () => {
-  purchaseUpgrade(2);
+availableItems.forEach((element, index) => {
+  element.button.addEventListener("click", () => {
+    purchaseUpgrade(index);
+  });
 });
 
 requestAnimationFrame(step);
@@ -70,9 +93,9 @@ function step(timestamp: number) {
   const increase = (growthRate * elapsed) / 1000;
   incrementCounter(increase);
 
-  checkCost(upA, 0);
-  checkCost(upB, 1);
-  checkCost(upC, 2);
+  availableItems.forEach((_element, index) => {
+    checkCost(index);
+  });
 
   requestAnimationFrame(step);
 }
@@ -81,20 +104,21 @@ function checkCounter(val: number) {
   return val > counter;
 }
 
-function checkCost(item: HTMLButtonElement, itemNum: number) {
-  item.disabled = checkCounter(
-    upgradeDetails[itemNum][1] * (1.15 ** upgradeDetails[itemNum][0]),
+function checkCost(itemNum: number) {
+  availableItems[itemNum].button.disabled = checkCounter(
+    availableItems[itemNum].cost * (1.15 ** availableItems[itemNum].count),
   );
 }
 
 function purchaseUpgrade(item: number) {
   incrementCounter(
-    -(upgradeDetails[item][1] * (1.15 ** upgradeDetails[item][0])),
+    -(availableItems[item].cost * (1.15 ** availableItems[item].count)),
   );
-  growthRate += upgradeDetails[item][2];
-  upgradeDetails[item][0]++;
+  growthRate += availableItems[item].rate;
+  availableItems[item].count++;
   growthElement.innerHTML = growthRate.toString();
-  upCounts[item].innerHTML = upgradeDetails[item][0].toString();
+  availableItems[item].countText.innerHTML = availableItems[item].count
+    .toString();
 }
 
 function incrementCounter(amount: number) {
