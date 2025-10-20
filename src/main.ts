@@ -7,10 +7,10 @@ let growthRate: number = 0;
 const upgradeDetails: number[][] = [[0, 10, .1], [0, 100, 2], [0, 1000, 50]];
 
 document.body.innerHTML = `
-  <h1>Incremental Game</h1>
-  <p>Counter: <span id="counter">0</span></p>
-  <p>Growth Rate: <span id="growthRate">0</span> /s</p>
+  <h1>Scapegoating Simulator</h1>
+  <p>Scapegoats: <span id="counter">0</span></p>
   <button id="increment">🐐</button>
+  <p>Growth Rate: <span id="growthRate">0</span> /s</p>
   <p>
   <button id="upgradeA" disabled>📣</button>
   Hecklers: <span id="upACount">0</span>
