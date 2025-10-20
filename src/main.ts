@@ -4,27 +4,54 @@ import "./style.css";
 //deno - lint - ignore prefer -const
 let counter: number = 0;
 let growthRate: number = 0;
+const upCount: number[] = [0, 0, 0];
 
 document.body.innerHTML = `
   <h1>Incremental Game</h1>
   <p>Counter: <span id="counter">0</span></p>
+  <p>Growth Rate: <span id="growthRate">0</span> /s</p>
   <button id="increment">🐐</button>
+  <p>
   <button id="upgradeA" disabled>📣</button>
+  Hecklers: <span id="upACount">0</span>
+  <p>
+  <button id="upgradeB" disabled>📰</button>
+  News Articles: <span id="upBCount">0</span>
+  <p>
+  <button id="upgradeC" disabled>👨🏼‍💻</button>
+  Algorithm: <span id="upCCount">0</span>
+  <p>
 
 `;
 
 // Add click handler
 const button = document.getElementById("increment")!;
 const upA = <HTMLButtonElement> document.getElementById("upgradeA")!;
+const upB = <HTMLButtonElement> document.getElementById("upgradeB")!;
+const upC = <HTMLButtonElement> document.getElementById("upgradeC")!;
+const upCounts = [
+  document.getElementById("upACount")!,
+  document.getElementById("upBCount")!,
+  document.getElementById("upCCount")!,
+];
+
 const counterElement = document.getElementById("counter")!;
+const growthElement = document.getElementById("growthRate")!;
 
 button.addEventListener("click", () => {
   incrementCounter(1);
 });
 
 upA.addEventListener("click", () => {
-  incrementCounter(-10);
-  growthRate++;
+  purchaseUpgrade(0, 10, .1);
+});
+
+upB.addEventListener("click", () => {
+  purchaseUpgrade(1, 100, 2);
+});
+
+upC.addEventListener("click", () => {
+  purchaseUpgrade(2, 1000, 50);
 });
 
 requestAnimationFrame(step);
@@ -44,6 +71,8 @@ function step(timestamp: number) {
   incrementCounter(increase);
 
   checkCost(upA, 10);
+  checkCost(upB, 100);
+  checkCost(upC, 1000);
 
   requestAnimationFrame(step);
 }
@@ -54,6 +83,14 @@ function checkCounter(val: number) {
 
 function checkCost(item: HTMLButtonElement, threshold: number) {
   item.disabled = checkCounter(threshold);
+}
+
+function purchaseUpgrade(item: number, cost: number, growth: number) {
+  incrementCounter(-cost);
+  growthRate += growth;
+  upCount[item]++;
+  growthElement.innerHTML = growthRate.toString();
+  upCounts[item].innerHTML = upCount[item].toString();
 }
 
 function incrementCounter(amount: number) {
